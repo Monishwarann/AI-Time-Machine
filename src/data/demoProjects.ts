@@ -1,0 +1,520 @@
+import { TimeMachineProject } from '../types/timeMachine';
+
+export const DEMO_PROJECTS: TimeMachineProject[] = [
+  {
+    id: 'demo-ai-platform',
+    name: 'AI Research Platform Evolution',
+    description: 'Reconstructed software evolution of an AI research codebase from 2019 prototype script to 2025 multi-tenant agent system.',
+    artifactType: 'Codebase',
+    uploadDate: '2026-09-22',
+    estimatedCoverage: '2019 → 2025',
+    versionCount: 7,
+    evidenceCount: 43,
+    confidenceScore: 'High',
+    lastAnalyzedDate: '2026-09-22 14:30',
+    fileHash: 'sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+    timelineEvents: [
+      {
+        id: 'evt-2019',
+        date: '2019',
+        title: 'Initial Concept & CLI Script',
+        description: 'Single standalone Python script with basic NumPy array processing and command-line execution.',
+        type: 'initial_concept',
+        confidence: 'verified',
+        status: 'verified',
+        affectedFiles: ['main.py', 'requirements.txt'],
+        dependencyChanges: [{ package: 'numpy', newVersion: '1.16.2' }],
+        evidence: [
+          {
+            id: 'ev-1',
+            sourceType: 'metadata',
+            sourceReference: 'main.py (Created 2019-03-14)',
+            contentSnippet: '# Single-file experiment runner created by K. M.',
+            confidence: 'verified'
+          },
+          {
+            id: 'ev-2',
+            sourceType: 'dependency',
+            sourceReference: 'requirements.txt',
+            contentSnippet: 'numpy==1.16.2\nscipy==1.2.1',
+            confidence: 'verified'
+          }
+        ]
+      },
+      {
+        id: 'evt-2020',
+        date: '2020',
+        title: 'Flask Web Prototype',
+        description: 'Introduced web server layer with Flask and basic HTML templates for uploading inputs.',
+        type: 'architecture',
+        confidence: 'strongly_supported',
+        status: 'evidence_based',
+        affectedFiles: ['app.py', 'templates/index.html', 'static/css/style.css'],
+        dependencyChanges: [
+          { package: 'flask', newVersion: '1.1.2' },
+          { package: 'numpy', oldVersion: '1.16.2', newVersion: '1.18.5' }
+        ],
+        evidence: [
+          {
+            id: 'ev-3',
+            sourceType: 'file',
+            sourceReference: 'app.py',
+            contentSnippet: 'from flask import Flask, render_template\napp = Flask(__name__)',
+            confidence: 'verified'
+          }
+        ]
+      },
+      {
+        id: 'evt-2021',
+        date: '2021',
+        title: 'Database & Relational Persistence',
+        description: 'SQLite backend introduced for storing run metrics and user query history.',
+        type: 'database',
+        confidence: 'strongly_supported',
+        status: 'evidence_based',
+        affectedFiles: ['models.py', 'database.py', 'schema.sql'],
+        schemaChanges: ['Created users table', 'Created runs table with execution_time'],
+        dependencyChanges: [{ package: 'sqlalchemy', newVersion: '1.4.15' }],
+        evidence: [
+          {
+            id: 'ev-4',
+            sourceType: 'schema',
+            sourceReference: 'schema.sql',
+            contentSnippet: 'CREATE TABLE runs (id INTEGER PRIMARY KEY, metric REAL);',
+            confidence: 'strongly_supported'
+          }
+        ]
+      },
+      {
+        id: 'evt-2022',
+        date: '2022',
+        title: 'FastAPI & JWT Authentication Added',
+        description: 'Migration from Flask to FastAPI for async execution, adding bearer token JWT security.',
+        type: 'security',
+        confidence: 'strongly_supported',
+        status: 'evidence_based',
+        affectedFiles: ['api/auth.py', 'api/router.py', 'core/jwt.py'],
+        dependencyChanges: [
+          { package: 'fastapi', newVersion: '0.78.0' },
+          { package: 'pyjwt', newVersion: '2.4.0' }
+        ],
+        evidence: [
+          {
+            id: 'ev-5',
+            sourceType: 'file',
+            sourceReference: 'api/auth.py',
+            contentSnippet: 'def create_access_token(data: dict):\n  # JWT sign',
+            confidence: 'strongly_supported'
+          },
+          {
+            id: 'ev-6',
+            sourceType: 'doc_heading',
+            sourceReference: 'README.md (2022 revision)',
+            contentSnippet: '## Security & Auth: Pass Bearer token in Header',
+            confidence: 'strongly_supported'
+          }
+        ]
+      },
+      {
+        id: 'evt-2023',
+        date: '2023',
+        title: 'Vector Embeddings & RAG Module Introduced',
+        description: 'First integration of vector embeddings and semantic search pipelines.',
+        type: 'feature',
+        confidence: 'strongly_supported',
+        status: 'evidence_based',
+        affectedFiles: ['services/vector_store.py', 'services/llm_client.py'],
+        dependencyChanges: [
+          { package: 'chromadb', newVersion: '0.3.21' },
+          { package: 'openai', newVersion: '0.27.4' }
+        ],
+        evidence: [
+          {
+            id: 'ev-7',
+            sourceType: 'dependency',
+            sourceReference: 'requirements.txt',
+            contentSnippet: 'chromadb>=0.3.21\nopenai>=0.27.4',
+            confidence: 'verified'
+          }
+        ]
+      },
+      {
+        id: 'evt-2024',
+        date: '2024',
+        title: 'React Dashboard & Microservice Decoupling',
+        description: 'Frontend migrated to modern React + Tailwind CSSSPA with decoupled REST API.',
+        type: 'ui',
+        confidence: 'strongly_supported',
+        status: 'evidence_based',
+        affectedFiles: ['frontend/src/App.tsx', 'frontend/package.json'],
+        dependencyChanges: [
+          { package: 'react', newVersion: '18.2.0' },
+          { package: 'tailwindcss', newVersion: '3.3.0' }
+        ],
+        evidence: [
+          {
+            id: 'ev-8',
+            sourceType: 'file',
+            sourceReference: 'frontend/package.json',
+            contentSnippet: '"react": "^18.2.0", "vite": "^4.0.0"',
+            confidence: 'verified'
+          }
+        ]
+      },
+      {
+        id: 'evt-2025',
+        date: '2025',
+        title: 'Current State: Autonomous Agent Hub',
+        description: 'Multi-agent orchestration loop with full audit trail logging and PostgreSQL vector search.',
+        type: 'refactoring',
+        confidence: 'verified',
+        status: 'verified',
+        affectedFiles: ['agents/orchestrator.ts', 'db/pgvector_migration.sql'],
+        evidence: [
+          {
+            id: 'ev-9',
+            sourceType: 'file',
+            sourceReference: 'agents/orchestrator.ts',
+            contentSnippet: 'export class AgentOrchestrator { runToolLoop() }',
+            confidence: 'verified'
+          }
+        ]
+      }
+    ],
+    reconstructedVersions: [
+      {
+        id: 'v-2019',
+        yearLabel: '2019',
+        versionTag: 'v0.1-script',
+        date: '2019-03-14',
+        architecture: {
+          frontend: 'None (CLI execution)',
+          backend: 'Python numpy script',
+          database: 'Flat CSV files',
+          auth: 'None',
+          ml: 'NumPy calculations'
+        },
+        filesCount: 3,
+        filesList: ['main.py', 'utils.py', 'requirements.txt'],
+        dependencies: { numpy: '1.16.2', scipy: '1.2.1' },
+        featuresList: ['Batch calculation', 'Command-line execution', 'CSV exporter']
+      },
+      {
+        id: 'v-2020',
+        yearLabel: '2020',
+        versionTag: 'v0.5-prototype',
+        date: '2020-07-20',
+        architecture: {
+          frontend: 'Jinja2 HTML templates',
+          backend: 'Flask WSGI server',
+          database: 'JSON file storage',
+          auth: 'None'
+        },
+        filesCount: 9,
+        filesList: ['app.py', 'main.py', 'templates/index.html', 'static/css/style.css', 'requirements.txt'],
+        dependencies: { flask: '1.1.2', numpy: '1.18.5', scipy: '1.4.1' },
+        featuresList: ['Web input upload', 'Browser visualizer', 'JSON session saving']
+      },
+      {
+        id: 'v-2021',
+        yearLabel: '2021',
+        versionTag: 'v1.0-monolith',
+        date: '2021-11-05',
+        architecture: {
+          frontend: 'Flask HTML + jQuery',
+          backend: 'Flask + SQLAlchemy',
+          database: 'SQLite',
+          auth: 'Basic HTTP Auth'
+        },
+        filesCount: 18,
+        filesList: ['app.py', 'models.py', 'database.py', 'schema.sql', 'templates/dashboard.html'],
+        dependencies: { flask: '2.0.1', sqlalchemy: '1.4.15', numpy: '1.20.3' },
+        featuresList: ['SQL run persistence', 'User query tables', 'Basic authentication']
+      },
+      {
+        id: 'v-2022',
+        yearLabel: '2022',
+        versionTag: 'v2.0-fastapi',
+        date: '2022-09-12',
+        architecture: {
+          frontend: 'Vanilla JS SPA',
+          backend: 'FastAPI ASGI',
+          database: 'PostgreSQL 14',
+          auth: 'JWT Bearer Tokens'
+        },
+        filesCount: 34,
+        filesList: ['api/main.py', 'api/auth.py', 'core/jwt.py', 'models/user.py', 'models/run.py'],
+        dependencies: { fastapi: '0.78.0', pyjwt: '2.4.0', psycopg2: '2.9.3' },
+        featuresList: ['Async API routes', 'JWT Token auth', 'PostgreSQL database backend', 'Interactive Swagger UI']
+      },
+      {
+        id: 'v-2024',
+        yearLabel: '2024',
+        versionTag: 'v3.5-react',
+        date: '2024-04-18',
+        architecture: {
+          frontend: 'React 18 + Vite',
+          backend: 'FastAPI + Celery Workers',
+          database: 'PostgreSQL + Redis',
+          auth: 'OAuth2 + JWT',
+          ml: 'Vector DB (Chroma)'
+        },
+        filesCount: 78,
+        filesList: ['frontend/src/App.tsx', 'backend/api/router.py', 'backend/services/vector_store.py'],
+        dependencies: { react: '18.2.0', fastapi: '0.104.1', chromadb: '0.4.18' },
+        featuresList: ['React frontend SPA', 'Background task queue', 'Semantic vector search', 'Role-based access control']
+      },
+      {
+        id: 'v-2025',
+        yearLabel: '2025',
+        versionTag: 'v4.0-agentic',
+        date: '2026-09-22',
+        architecture: {
+          frontend: 'Next.js 14 + Tailwind',
+          backend: 'FastAPI Microservices',
+          database: 'PostgreSQL + pgvector',
+          auth: 'Supabase Auth',
+          ml: 'Multi-provider LLM (Gemini + Groq)'
+        },
+        filesCount: 142,
+        filesList: ['agents/orchestrator.ts', 'db/pgvector_migration.sql', 'frontend/app/page.tsx'],
+        dependencies: { '@google/generative-ai': '0.1.1', react: '19.0.0-rc', fastapi: '0.110.0' },
+        featuresList: ['Autonomous agent execution loop', 'pgvector database', 'Real-time WebSocket streaming', 'Audit log verification']
+      }
+    ],
+    digitalFossils: [
+      {
+        id: 'fos-1',
+        name: 'flask_session_cookie',
+        type: 'config',
+        firstObserved: '2020 artifact',
+        lastObserved: '2021 artifact',
+        description: 'Legacy Flask cookie authentication config replaced by JWT Bearer tokens in 2022.',
+        currentStatus: 'replaced',
+        evidence: ['app.py line 14: SECRET_KEY = "old_flask_key"', 'config.py comment: deprecated in v2.0']
+      },
+      {
+        id: 'fos-2',
+        name: 'numpy.matrix() call',
+        type: 'api',
+        firstObserved: '2019 artifact',
+        lastObserved: '2022 artifact',
+        description: 'Deprecated NumPy matrix data structure replaced by standard ndarray objects.',
+        currentStatus: 'deprecated',
+        evidence: ['utils.py: np.matrix([[1,2],[3,4]])']
+      },
+      {
+        id: 'fos-3',
+        name: 'chromadb==0.3.21',
+        type: 'dependency',
+        firstObserved: '2023 artifact',
+        lastObserved: '2024 artifact',
+        description: 'Early experimental vector database library replaced by PostgreSQL pgvector extension.',
+        currentStatus: 'replaced',
+        evidence: ['requirements_2023.txt: chromadb==0.3.21', 'db/pgvector_migration.sql']
+      }
+    ],
+    missingHistoryGaps: [
+      {
+        id: 'gap-1',
+        startYear: '2022-10',
+        endYear: '2023-05',
+        description: 'No direct code commits or configuration changes recorded between initial FastAPI release and ChromaDB integration.',
+        severity: 'medium',
+        recommendedArtifacts: ['Git commit logs (2022-2023)', 'Slack architecture discussion exports', 'Deployment logs']
+      }
+    ],
+    hypotheses: [
+      {
+        id: 'hyp-1',
+        eventId: 'evt-2022',
+        eventTitle: 'FastAPI & JWT Authentication Added',
+        explanations: [
+          {
+            letter: 'A',
+            title: 'Refactored for Async Scalability',
+            evidence: ['Presence of asyncio syntax in router', 'Async database driver asyncpg in requirements'],
+            uncertaintyReason: 'FastAPI adoption coincided with database migration.'
+          },
+          {
+            letter: 'B',
+            title: 'Compliance & Security Requirements',
+            evidence: ['JWT secret handling', 'User permissions schema created in DB'],
+            uncertaintyReason: 'Exact internal business requirement date unavailable in code artifacts.'
+          }
+        ]
+      }
+    ],
+    graphNodes: [
+      { id: 'n-evt-2019', label: '2019 Script', type: 'event', confidence: 'verified', details: 'Initial Python prototype' },
+      { id: 'n-evt-2021', label: '2021 SQLite DB', type: 'event', confidence: 'strongly_supported', details: 'Relational database added' },
+      { id: 'n-evt-2022', label: '2022 FastAPI + Auth', type: 'event', confidence: 'strongly_supported', details: 'Security and REST layer' },
+      { id: 'n-evt-2025', label: '2025 Agent Hub', type: 'event', confidence: 'verified', details: 'Multi-agent orchestration' },
+      { id: 'n-file-main', label: 'main.py', type: 'file', confidence: 'verified', details: 'Core entry point script' },
+      { id: 'n-file-auth', label: 'api/auth.py', type: 'file', confidence: 'verified', details: 'JWT authentication module' },
+      { id: 'n-file-agent', label: 'agents/orchestrator.ts', type: 'file', confidence: 'verified', details: 'Agent loop' },
+      { id: 'n-dep-fastapi', label: 'FastAPI 0.78', type: 'dependency', confidence: 'verified', details: 'REST Framework' },
+      { id: 'n-dep-jwt', label: 'PyJWT 2.4', type: 'dependency', confidence: 'verified', details: 'Auth library' },
+      { id: 'n-schema-users', label: 'users table', type: 'schema', confidence: 'strongly_supported', details: 'SQL user authentication table' }
+    ],
+    graphEdges: [
+      { id: 'e1', source: 'n-evt-2019', target: 'n-file-main', label: 'created' },
+      { id: 'e2', source: 'n-evt-2022', target: 'n-file-auth', label: 'introduced' },
+      { id: 'e3', source: 'n-evt-2022', target: 'n-dep-fastapi', label: 'requires' },
+      { id: 'e4', source: 'n-evt-2022', target: 'n-dep-jwt', label: 'requires' },
+      { id: 'e5', source: 'n-file-auth', target: 'n-schema-users', label: 'queries' },
+      { id: 'e6', source: 'n-evt-2025', target: 'n-file-agent', label: 'implements' }
+    ],
+    whatIfBranches: [],
+    auditLogs: [
+      {
+        id: 'aud-1',
+        timestamp: '2026-09-22 14:30:00',
+        stage: 'File Validation & Extraction',
+        status: 'success',
+        details: 'Uploaded archive sha256:e3b0c44... extracted 142 files across 6 historical branches.',
+        hash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+      },
+      {
+        id: 'aud-2',
+        timestamp: '2026-09-22 14:30:02',
+        stage: 'Metadata Extraction',
+        status: 'info',
+        details: 'Discovered file modification timestamps ranging from 2019-03-14 to 2026-09-22.',
+        hash: 'a7c8810294b'
+      },
+      {
+        id: 'aud-3',
+        timestamp: '2026-09-22 14:30:05',
+        stage: 'Timeline Reconstruction',
+        status: 'success',
+        details: 'Reconstructed 7 historical events with confidence distribution: 3 Verified, 4 Strongly Supported.'
+      }
+    ]
+  },
+  {
+    id: 'demo-dataset-evolution',
+    name: 'Global Climate Metrics Dataset (2018-2025)',
+    description: 'Dataset structural evolution tracking schema modifications, column additions (8 → 31 columns), and data type transitions over 7 years.',
+    artifactType: 'Dataset',
+    uploadDate: '2026-09-22',
+    estimatedCoverage: '2018 → 2025',
+    versionCount: 4,
+    evidenceCount: 22,
+    confidenceScore: 'High',
+    lastAnalyzedDate: '2026-09-22 11:15',
+    fileHash: 'sha256:f81289192491a9214a1f10928a',
+    timelineEvents: [
+      {
+        id: 'ds-2018',
+        date: '2018',
+        title: 'Initial 8-Column Temperature Log',
+        description: 'CSV structure containing basic timestamp, station_id, latitude, longitude, and air_temp.',
+        type: 'dataset',
+        confidence: 'verified',
+        status: 'verified',
+        evidence: [
+          {
+            id: 'ev-ds1',
+            sourceType: 'schema',
+            sourceReference: 'climate_2018.csv',
+            contentSnippet: 'timestamp,station_id,lat,lon,temp_c,humidity,pressure_hpa,status',
+            confidence: 'verified'
+          }
+        ]
+      },
+      {
+        id: 'ds-2020',
+        date: '2020',
+        title: 'Schema Expansion: 16 Columns',
+        description: 'Added wind vectors (wind_speed, wind_direction) and solar radiation readings.',
+        type: 'dataset',
+        confidence: 'strongly_supported',
+        status: 'evidence_based',
+        evidence: [
+          {
+            id: 'ev-ds2',
+            sourceType: 'schema',
+            sourceReference: 'climate_2020.csv',
+            contentSnippet: 'Added columns: wind_speed_ms, wind_deg, solar_kw, precipitation_mm',
+            confidence: 'strongly_supported'
+          }
+        ]
+      },
+      {
+        id: 'ds-2022',
+        date: '2022',
+        title: 'Geospatial & Sensor Calibration Meta',
+        description: 'Added sensor_hardware_ver, calibration_date, and elevation metadata fields (23 columns).',
+        type: 'dataset',
+        confidence: 'strongly_supported',
+        status: 'evidence_based',
+        evidence: [
+          {
+            id: 'ev-ds3',
+            sourceType: 'schema',
+            sourceReference: 'climate_2022.csv',
+            contentSnippet: 'Added columns: sensor_ver, sensor_battery_v, elevation_m, qc_flag',
+            confidence: 'strongly_supported'
+          }
+        ]
+      },
+      {
+        id: 'ds-2024',
+        date: '2024',
+        title: 'AI Climate Anomaly Metrics (31 Columns)',
+        description: 'Enriched schema with real-time AI anomaly scores, machine learning confidence flags, and satellite cross-references.',
+        type: 'dataset',
+        confidence: 'verified',
+        status: 'verified',
+        evidence: [
+          {
+            id: 'ev-ds4',
+            sourceType: 'schema',
+            sourceReference: 'climate_2024.parquet',
+            contentSnippet: '31 columns including anomaly_score, ml_model_ver, satellite_match_id',
+            confidence: 'verified'
+          }
+        ]
+      }
+    ],
+    reconstructedVersions: [
+      {
+        id: 'v-ds-2018',
+        yearLabel: '2018',
+        versionTag: 'v1.0-raw',
+        date: '2018-01-01',
+        architecture: { database: 'CSV Flat File' },
+        filesCount: 1,
+        filesList: ['climate_2018.csv'],
+        dependencies: {},
+        featuresList: ['Raw temperature readings', 'Basic station coordinates'],
+        schemaSummary: { columnsCount: 8, tablesCount: 1, keyFields: ['timestamp', 'station_id', 'temp_c'] }
+      },
+      {
+        id: 'v-ds-2024',
+        yearLabel: '2024',
+        versionTag: 'v4.0-enriched',
+        date: '2024-06-30',
+        architecture: { database: 'Parquet + GeoPandas' },
+        filesCount: 4,
+        filesList: ['climate_2024.parquet', 'schema_validation.json'],
+        dependencies: { pyarrow: '14.0.1', geopandas: '0.14.0' },
+        featuresList: ['31 enriched columns', 'Quality control flags', 'AI Anomaly Scores'],
+        schemaSummary: { columnsCount: 31, tablesCount: 1, keyFields: ['timestamp', 'station_id', 'anomaly_score', 'qc_flag'] }
+      }
+    ],
+    digitalFossils: [],
+    missingHistoryGaps: [],
+    hypotheses: [],
+    graphNodes: [
+      { id: 'n-ds-2018', label: '2018 Schema (8 cols)', type: 'schema', confidence: 'verified' },
+      { id: 'n-ds-2024', label: '2024 Schema (31 cols)', type: 'schema', confidence: 'verified' }
+    ],
+    graphEdges: [
+      { id: 'e-ds-1', source: 'n-ds-2018', target: 'n-ds-2024', label: 'expanded' }
+    ],
+    whatIfBranches: [],
+    auditLogs: []
+  }
+];
