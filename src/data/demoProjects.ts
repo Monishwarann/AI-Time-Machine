@@ -63,6 +63,73 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
         severity: 'high'
       }
     ],
+    claimLedger: [
+      {
+        claimId: 'CLM-0001',
+        statement: 'Initial Python script executed as single standalone batch runner.',
+        status: 'supported',
+        supportingEvidenceIds: ['ev-1', 'ev-2'],
+        contradictingEvidenceIds: []
+      },
+      {
+        claimId: 'CLM-0002',
+        statement: 'Flask WSGI web server introduced for browser input uploads in 2020.',
+        status: 'supported',
+        supportingEvidenceIds: ['ev-3'],
+        contradictingEvidenceIds: []
+      },
+      {
+        claimId: 'CLM-0003',
+        statement: 'SQLite relational database schema created for persistent metric storage.',
+        status: 'supported',
+        supportingEvidenceIds: ['ev-4'],
+        contradictingEvidenceIds: []
+      },
+      {
+        claimId: 'CLM-0004',
+        statement: 'FastAPI and JWT Bearer security module integrated in 2022.',
+        status: 'supported',
+        supportingEvidenceIds: ['ev-5'],
+        contradictingEvidenceIds: []
+      }
+    ],
+    componentEvolutions: [
+      {
+        id: 'comp-1',
+        componentName: 'process_data()',
+        type: 'function',
+        firstObserved: '2019',
+        history: [
+          { yearLabel: '2019', snippet: 'def process_data(data):\n  return np.array(data) * 2', changeNote: 'Initial basic NumPy array calculation' },
+          { yearLabel: '2021', snippet: 'def process_data(data):\n  # Validate input data\n  if not data: raise ValueError()\n  return db.save_metrics(np.array(data))', changeNote: 'Added input validation and SQLite persistence' },
+          { yearLabel: '2024', snippet: 'async def process_data(req: DataRequest):\n  async with async_session() as session:\n    return await session.execute(query)', changeNote: 'Migrated to async/await and PostgreSQL driver' }
+        ]
+      },
+      {
+        id: 'comp-2',
+        componentName: 'AuthService',
+        type: 'class',
+        firstObserved: '2022',
+        history: [
+          { yearLabel: '2022', snippet: 'class AuthService:\n  def create_jwt(self, user):\n    return jwt.encode(user, SECRET)', changeNote: 'Initial JWT Bearer token generator' },
+          { yearLabel: '2025', snippet: 'class AuthService:\n  async font_token(self, token):\n    # Supabase & OAuth2 support\n    return verify_supabase_session(token)', changeNote: 'OAuth2 and multi-provider session validation' }
+        ]
+      }
+    ],
+    nextBestEvidence: [
+      {
+        id: 'nbe-1',
+        targetQuestion: 'When was authentication first deployed to production?',
+        currentEvidence: 'FastAPI auth router introduced in 2022 codebase snapshot',
+        recommendedArtifacts: ['Deployment pipeline logs', 'Git commit history', 'Slack arch discussions'],
+        expectedUncertaintyReduction: 'Reduces timestamp uncertainty from ±6 months to exact day.'
+      }
+    ],
+    evolutionVelocity: [
+      { interval: '2019 → 2021', velocityRating: 'Medium', filesChanged: 15, depsChanged: 4, score: 45 },
+      { interval: '2021 → 2023', velocityRating: 'High', filesChanged: 34, depsChanged: 9, score: 80 },
+      { interval: '2023 → 2025', velocityRating: 'Very High', filesChanged: 78, depsChanged: 16, score: 95 }
+    ],
     artifacts: [
       {
         id: 'art-demo-1',
@@ -418,12 +485,9 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
       { id: 'n-schema-users', label: 'users table', type: 'schema', confidence: 'strongly_supported', details: 'SQL user authentication table' }
     ],
     graphEdges: [
-      { id: 'e1', source: 'n-evt-2019', target: 'n-file-main', label: 'created' },
-      { id: 'e2', source: 'n-evt-2022', target: 'n-file-auth', label: 'introduced' },
-      { id: 'e3', source: 'n-evt-2022', target: 'n-dep-fastapi', label: 'requires' },
-      { id: 'e4', source: 'n-evt-2022', target: 'n-dep-jwt', label: 'requires' },
-      { id: 'e5', source: 'n-file-auth', target: 'n-schema-users', label: 'queries' },
-      { id: 'e6', source: 'n-evt-2025', target: 'n-file-agent', label: 'implements' }
+      { id: 'e1', source: 'n-evt-2019', target: 'n-file-main', relation: 'CONTAINS', validFrom: '2019' },
+      { id: 'e2', source: 'n-evt-2022', target: 'n-file-auth', relation: 'MODIFIED_IN', validFrom: '2022' },
+      { id: 'e3', source: 'n-evt-2022', target: 'n-dep-fastapi', relation: 'DEPENDS_ON', validFrom: '2022' }
     ],
     whatIfBranches: [],
     auditLogs: [

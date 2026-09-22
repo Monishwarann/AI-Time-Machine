@@ -20,6 +20,13 @@ import { ProjectDnaView } from './ProjectDnaView';
 import { ReconstructionQualityPanel } from '../dashboard/ReconstructionQualityPanel';
 import { HumanCorrectionModal } from '../annotations/HumanCorrectionModal';
 import { PublicShareModal } from '../sharing/PublicShareModal';
+import { CinematicReplayModal } from '../replay/CinematicReplayModal';
+import { TimeTravelDebugger } from './TimeTravelDebugger';
+import { TemporalCodeDiffViewer } from '../code/TemporalCodeDiffViewer';
+import { ClaimLedgerView } from '../audit/ClaimLedgerView';
+import { LostAndSurvivedView } from './LostAndSurvivedView';
+import { NextBestEvidencePanel } from '../assistant/NextBestEvidencePanel';
+import { VersionCertificateModal } from '../export/VersionCertificateModal';
 import {
   History,
   Compass,
@@ -39,7 +46,12 @@ import {
   Share2,
   Terminal,
   Zap,
-  UserCheck
+  Play,
+  Sliders,
+  Code,
+  FileText,
+  Award,
+  HelpCircle
 } from 'lucide-react';
 
 interface ProjectExplorerProps {
@@ -56,6 +68,8 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isReplayOpen, setIsReplayOpen] = useState(false);
+  const [isCertOpen, setIsCertOpen] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -108,13 +122,27 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
 
           <div className="flex flex-wrap items-center gap-2.5">
             <button
+              onClick={() => setIsReplayOpen(true)}
+              className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-cyan-500 text-slate-950 font-bold text-xs shadow-lg hover:scale-105 transition-all"
+            >
+              <Play className="w-4 h-4 fill-slate-950" />
+              <span>▶ Replay History</span>
+            </button>
+
+            <button
               onClick={() => setIsPaletteOpen(true)}
               className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs font-bold transition-all"
-              title="Command Palette (Ctrl + K)"
             >
               <Terminal className="w-4 h-4 text-cyan-400" />
-              <span className="hidden sm:inline">Command Palette</span>
-              <span className="text-[10px] bg-slate-950 px-1.5 py-0.5 rounded text-slate-400">Ctrl+K</span>
+              <span className="hidden sm:inline">Ctrl+K</span>
+            </button>
+
+            <button
+              onClick={() => setIsCertOpen(true)}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-amber-300 text-xs font-bold transition-all"
+            >
+              <Award className="w-4 h-4 text-amber-400" />
+              <span className="hidden sm:inline">Version Certificate</span>
             </button>
 
             <button
@@ -122,7 +150,6 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
               className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-cyan-300 text-xs font-bold transition-all"
             >
               <Share2 className="w-4 h-4 text-cyan-400" />
-              <span className="hidden sm:inline">Share Public Link</span>
             </button>
 
             <button
@@ -130,12 +157,12 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
               className="flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-300 font-bold text-xs transition-all shadow-md"
             >
               <Download className="w-4 h-4 text-cyan-400" />
-              <span>Export Report V2</span>
+              <span>Export Report V3</span>
             </button>
           </div>
         </div>
 
-        {/* Quality Coverage Panel V2 */}
+        {/* Quality Coverage Panel V3 */}
         {project.reconstructionQuality && (
           <ReconstructionQualityPanel quality={project.reconstructionQuality} />
         )}
@@ -152,7 +179,7 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
         </div>
       </div>
 
-      {/* Tabs Navigation Bar */}
+      {/* Tabs Navigation Bar V3 */}
       <div className="flex items-center space-x-2 overflow-x-auto border-b border-slate-800 pb-2 text-xs">
         <button
           onClick={() => setActiveTab('timeline')}
@@ -167,15 +194,63 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
         </button>
 
         <button
-          onClick={() => setActiveTab('compare')}
+          onClick={() => setActiveTab('timetravel')}
           className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
-            activeTab === 'compare'
+            activeTab === 'timetravel'
               ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold'
               : 'text-slate-400 border-transparent hover:text-slate-200'
           }`}
         >
-          <FileDiff className="w-4 h-4" />
-          <span>Compare Versions</span>
+          <Sliders className="w-4 h-4 text-cyan-400" />
+          <span>Time Travel Debugger</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('codediff')}
+          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
+            activeTab === 'codediff'
+              ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold'
+              : 'text-slate-400 border-transparent hover:text-slate-200'
+          }`}
+        >
+          <Code className="w-4 h-4 text-cyan-400" />
+          <span>Code Diff Explorer</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('claimledger')}
+          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
+            activeTab === 'claimledger'
+              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold'
+              : 'text-slate-400 border-transparent hover:text-slate-200'
+          }`}
+        >
+          <FileText className="w-4 h-4 text-emerald-400" />
+          <span>Claim Ledger</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('lostsurvived')}
+          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
+            activeTab === 'lostsurvived'
+              ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold'
+              : 'text-slate-400 border-transparent hover:text-slate-200'
+          }`}
+        >
+          <Bone className="w-4 h-4 text-amber-400" />
+          <span>Lost & Survived</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('nextbest')}
+          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
+            activeTab === 'nextbest'
+              ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold'
+              : 'text-slate-400 border-transparent hover:text-slate-200'
+          }`}
+        >
+          <HelpCircle className="w-4 h-4 text-amber-400" />
+          <span>Next Best Evidence</span>
         </button>
 
         <button
@@ -191,39 +266,15 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
         </button>
 
         <button
-          onClick={() => setActiveTab('conflicts')}
+          onClick={() => setActiveTab('compare')}
           className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
-            activeTab === 'conflicts'
-              ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 font-bold'
+            activeTab === 'compare'
+              ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold'
               : 'text-slate-400 border-transparent hover:text-slate-200'
           }`}
         >
-          <AlertTriangle className="w-4 h-4 text-rose-400" />
-          <span>Conflicts ({project.conflicts?.length || 0})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('anomalies')}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
-            activeTab === 'anomalies'
-              ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold'
-              : 'text-slate-400 border-transparent hover:text-slate-200'
-          }`}
-        >
-          <Zap className="w-4 h-4 text-amber-400" />
-          <span>Anomalies ({project.anomalies?.length || 0})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('dataset')}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
-            activeTab === 'dataset'
-              ? 'bg-purple-500/20 text-purple-300 border-purple-500/40 font-bold'
-              : 'text-slate-400 border-transparent hover:text-slate-200'
-          }`}
-        >
-          <Database className="w-4 h-4 text-purple-400" />
-          <span>Dataset Time Machine</span>
+          <FileDiff className="w-4 h-4" />
+          <span>Compare Versions</span>
         </button>
 
         <button
@@ -263,18 +314,6 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
         </button>
 
         <button
-          onClick={() => setActiveTab('fossils')}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
-            activeTab === 'fossils'
-              ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold'
-              : 'text-slate-400 border-transparent hover:text-slate-200'
-          }`}
-        >
-          <Bone className="w-4 h-4 text-amber-400" />
-          <span>Digital Fossils</span>
-        </button>
-
-        <button
           onClick={() => setActiveTab('audit')}
           className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
             activeTab === 'audit'
@@ -292,10 +331,13 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
         {activeTab === 'timeline' && (
           <InteractiveTimeline project={project} onSelectEvent={evt => setSelectedEvent(evt)} />
         )}
+        {activeTab === 'timetravel' && <TimeTravelDebugger project={project} />}
+        {activeTab === 'codediff' && <TemporalCodeDiffViewer project={project} />}
+        {activeTab === 'claimledger' && <ClaimLedgerView project={project} />}
+        {activeTab === 'lostsurvived' && <LostAndSurvivedView project={project} />}
+        {activeTab === 'nextbest' && <NextBestEvidencePanel project={project} />}
         {activeTab === 'compare' && <DiffViewer project={project} />}
         {activeTab === 'dna' && <ProjectDnaView project={project} />}
-        {activeTab === 'conflicts' && <ConflictDetectorView project={project} />}
-        {activeTab === 'anomalies' && <AnomalyDetectorView project={project} />}
         {activeTab === 'dataset' && <DatasetEvolutionView project={project} />}
         {activeTab === 'graph' && <EvidenceGraphView project={project} />}
         {activeTab === 'whatif' && <WhatIfBranchGenerator project={project} />}
@@ -339,6 +381,14 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
 
       {isShareOpen && (
         <PublicShareModal project={project} onClose={() => setIsShareOpen(false)} />
+      )}
+
+      {isReplayOpen && (
+        <CinematicReplayModal project={project} onClose={() => setIsReplayOpen(false)} />
+      )}
+
+      {isCertOpen && (
+        <VersionCertificateModal project={project} onClose={() => setIsCertOpen(false)} />
       )}
     </div>
   );

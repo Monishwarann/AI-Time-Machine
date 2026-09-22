@@ -26,6 +26,15 @@ export interface EvidenceItem {
   contradictingEventIds?: string[];
 }
 
+export interface ClaimLedgerEntry {
+  claimId: string;
+  statement: string;
+  status: 'supported' | 'partially_supported' | 'contradicted' | 'unresolved' | 'user_corrected';
+  supportingEvidenceIds: string[];
+  contradictingEvidenceIds: string[];
+  uncertainty?: string;
+}
+
 export interface TimelineEvent {
   id: string;
   date: string;
@@ -114,22 +123,27 @@ export interface ReconstructedVersion {
   websiteSnapshotHtml?: string;
 }
 
-export interface GraphNode {
-  id: string;
-  label: string;
-  type: 'event' | 'file' | 'dependency' | 'doc' | 'schema' | 'architecture';
-  confidence: ConfidenceLevel;
-  source?: string;
-  details?: string;
-  x?: number;
-  y?: number;
-}
-
-export interface GraphEdge {
+export interface TemporalGraphEdge {
   id: string;
   source: string;
   target: string;
-  label?: string;
+  relation: 'CONTAINS' | 'DEPENDS_ON' | 'REFERENCES' | 'MODIFIED_IN' | 'FIRST_SEEN_IN' | 'LAST_SEEN_IN' | 'SUPPORTS' | 'CONTRADICTS' | 'REPLACED_BY';
+  validFrom: string;
+  validUntil?: string;
+  evidenceId?: string;
+}
+
+export interface GraphNode {
+  id: string;
+  label: string;
+  type: 'event' | 'file' | 'dependency' | 'doc' | 'schema' | 'architecture' | 'function' | 'api';
+  confidence: ConfidenceLevel;
+  source?: string;
+  details?: string;
+  validFrom?: string;
+  validUntil?: string;
+  x?: number;
+  y?: number;
 }
 
 export interface DigitalFossil {
@@ -150,6 +164,41 @@ export interface MissingHistoryGap {
   description: string;
   severity: 'high' | 'medium' | 'low';
   recommendedArtifacts: string[];
+}
+
+export interface ComponentEvolution {
+  id: string;
+  componentName: string;
+  type: 'function' | 'class' | 'api';
+  firstObserved: string;
+  history: { yearLabel: string; snippet: string; changeNote: string }[];
+}
+
+export interface NextBestEvidence {
+  id: string;
+  targetQuestion: string;
+  currentEvidence: string;
+  recommendedArtifacts: string[];
+  expectedUncertaintyReduction: string;
+}
+
+export interface VersionCertificate {
+  certificateId: string;
+  artifactName: string;
+  sha256Hash: string;
+  analyzedTimestamp: string;
+  fileCount: number;
+  evidenceCount: number;
+  eventsCount: number;
+  snapshotId: string;
+}
+
+export interface EvolutionVelocityItem {
+  interval: string;
+  velocityRating: 'Low' | 'Medium' | 'High' | 'Very High';
+  filesChanged: number;
+  depsChanged: number;
+  score: number;
 }
 
 export interface MultipleHypothesis {
@@ -220,6 +269,10 @@ export interface TimeMachineProject {
   reconstructionQuality: ReconstructionQuality;
   conflicts: EvidenceConflict[];
   anomalies: HistoricalAnomaly[];
+  claimLedger: ClaimLedgerEntry[];
+  componentEvolutions: ComponentEvolution[];
+  nextBestEvidence: NextBestEvidence[];
+  evolutionVelocity: EvolutionVelocityItem[];
   artifacts: MultiArtifactItem[];
   timelineEvents: TimelineEvent[];
   reconstructedVersions: ReconstructedVersion[];
@@ -227,7 +280,7 @@ export interface TimeMachineProject {
   missingHistoryGaps: MissingHistoryGap[];
   hypotheses: MultipleHypothesis[];
   graphNodes: GraphNode[];
-  graphEdges: GraphEdge[];
+  graphEdges: TemporalGraphEdge[];
   whatIfBranches: WhatIfBranch[];
   auditLogs: AuditTrailItem[];
   rawFiles?: { path: string; size: number; modifiedDate?: string; content?: string }[];
