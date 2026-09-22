@@ -34,10 +34,13 @@ export interface TimelineEvent {
   evidence: EvidenceItem[];
   confidence: ConfidenceLevel;
   status: 'verified' | 'evidence_based' | 'inferred' | 'hypothetical';
+  isVerifiedGitHistory?: boolean;
   isHypothetical?: boolean;
   affectedFiles?: string[];
   dependencyChanges?: { package: string; oldVersion?: string; newVersion?: string }[];
   schemaChanges?: string[];
+  commitHash?: string;
+  commitAuthor?: string;
 }
 
 export interface ReconstructedVersion {
@@ -59,6 +62,7 @@ export interface ReconstructedVersion {
   featuresList: string[];
   schemaSummary?: { columnsCount: number; tablesCount: number; keyFields: string[] };
   docDriftNote?: string;
+  websiteSnapshotHtml?: string;
 }
 
 export interface GraphNode {
@@ -129,11 +133,23 @@ export interface AuditTrailItem {
   hash?: string;
 }
 
+export interface ChangeScorecard {
+  versionsDetected: number;
+  filesAnalyzed: number;
+  majorChanges: number;
+  technologiesDetected: number;
+  architectureChanges: number;
+  uiChanges: number;
+  evidenceSources: number;
+}
+
 export interface TimeMachineProject {
   id: string;
   name: string;
   description: string;
-  artifactType: 'ZIP Archive' | 'Codebase' | 'Website' | 'Document' | 'Dataset' | 'API Schema';
+  artifactType: 'ZIP Archive' | 'Codebase' | 'Website' | 'Document' | 'Dataset' | 'API Schema' | 'GitHub Repository';
+  githubUrl?: string;
+  hasVerifiedGitHistory?: boolean;
   uploadDate: string;
   estimatedCoverage: string; // e.g. "2019 → 2025"
   versionCount: number;
@@ -141,6 +157,7 @@ export interface TimeMachineProject {
   confidenceScore: 'High' | 'Medium' | 'Low' | 'Speculative';
   lastAnalyzedDate: string;
   fileHash: string;
+  scorecard: ChangeScorecard;
   timelineEvents: TimelineEvent[];
   reconstructedVersions: ReconstructedVersion[];
   digitalFossils: DigitalFossil[];

@@ -13,6 +13,15 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
     confidenceScore: 'High',
     lastAnalyzedDate: '2026-09-22 14:30',
     fileHash: 'sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+    scorecard: {
+      versionsDetected: 7,
+      filesAnalyzed: 142,
+      majorChanges: 37,
+      technologiesDetected: 14,
+      architectureChanges: 6,
+      uiChanges: 12,
+      evidenceSources: 43
+    },
     timelineEvents: [
       {
         id: 'evt-2019',
@@ -105,13 +114,6 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
             sourceReference: 'api/auth.py',
             contentSnippet: 'def create_access_token(data: dict):\n  # JWT sign',
             confidence: 'strongly_supported'
-          },
-          {
-            id: 'ev-6',
-            sourceType: 'doc_heading',
-            sourceReference: 'README.md (2022 revision)',
-            contentSnippet: '## Security & Auth: Pass Bearer token in Header',
-            confidence: 'strongly_supported'
           }
         ]
       },
@@ -142,7 +144,7 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
         id: 'evt-2024',
         date: '2024',
         title: 'React Dashboard & Microservice Decoupling',
-        description: 'Frontend migrated to modern React + Tailwind CSSSPA with decoupled REST API.',
+        description: 'Frontend migrated to modern React + Tailwind CSS SPA with decoupled REST API.',
         type: 'ui',
         confidence: 'strongly_supported',
         status: 'evidence_based',
@@ -374,147 +376,7 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
         status: 'success',
         details: 'Uploaded archive sha256:e3b0c44... extracted 142 files across 6 historical branches.',
         hash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
-      },
-      {
-        id: 'aud-2',
-        timestamp: '2026-09-22 14:30:02',
-        stage: 'Metadata Extraction',
-        status: 'info',
-        details: 'Discovered file modification timestamps ranging from 2019-03-14 to 2026-09-22.',
-        hash: 'a7c8810294b'
-      },
-      {
-        id: 'aud-3',
-        timestamp: '2026-09-22 14:30:05',
-        stage: 'Timeline Reconstruction',
-        status: 'success',
-        details: 'Reconstructed 7 historical events with confidence distribution: 3 Verified, 4 Strongly Supported.'
       }
     ]
-  },
-  {
-    id: 'demo-dataset-evolution',
-    name: 'Global Climate Metrics Dataset (2018-2025)',
-    description: 'Dataset structural evolution tracking schema modifications, column additions (8 → 31 columns), and data type transitions over 7 years.',
-    artifactType: 'Dataset',
-    uploadDate: '2026-09-22',
-    estimatedCoverage: '2018 → 2025',
-    versionCount: 4,
-    evidenceCount: 22,
-    confidenceScore: 'High',
-    lastAnalyzedDate: '2026-09-22 11:15',
-    fileHash: 'sha256:f81289192491a9214a1f10928a',
-    timelineEvents: [
-      {
-        id: 'ds-2018',
-        date: '2018',
-        title: 'Initial 8-Column Temperature Log',
-        description: 'CSV structure containing basic timestamp, station_id, latitude, longitude, and air_temp.',
-        type: 'dataset',
-        confidence: 'verified',
-        status: 'verified',
-        evidence: [
-          {
-            id: 'ev-ds1',
-            sourceType: 'schema',
-            sourceReference: 'climate_2018.csv',
-            contentSnippet: 'timestamp,station_id,lat,lon,temp_c,humidity,pressure_hpa,status',
-            confidence: 'verified'
-          }
-        ]
-      },
-      {
-        id: 'ds-2020',
-        date: '2020',
-        title: 'Schema Expansion: 16 Columns',
-        description: 'Added wind vectors (wind_speed, wind_direction) and solar radiation readings.',
-        type: 'dataset',
-        confidence: 'strongly_supported',
-        status: 'evidence_based',
-        evidence: [
-          {
-            id: 'ev-ds2',
-            sourceType: 'schema',
-            sourceReference: 'climate_2020.csv',
-            contentSnippet: 'Added columns: wind_speed_ms, wind_deg, solar_kw, precipitation_mm',
-            confidence: 'strongly_supported'
-          }
-        ]
-      },
-      {
-        id: 'ds-2022',
-        date: '2022',
-        title: 'Geospatial & Sensor Calibration Meta',
-        description: 'Added sensor_hardware_ver, calibration_date, and elevation metadata fields (23 columns).',
-        type: 'dataset',
-        confidence: 'strongly_supported',
-        status: 'evidence_based',
-        evidence: [
-          {
-            id: 'ev-ds3',
-            sourceType: 'schema',
-            sourceReference: 'climate_2022.csv',
-            contentSnippet: 'Added columns: sensor_ver, sensor_battery_v, elevation_m, qc_flag',
-            confidence: 'strongly_supported'
-          }
-        ]
-      },
-      {
-        id: 'ds-2024',
-        date: '2024',
-        title: 'AI Climate Anomaly Metrics (31 Columns)',
-        description: 'Enriched schema with real-time AI anomaly scores, machine learning confidence flags, and satellite cross-references.',
-        type: 'dataset',
-        confidence: 'verified',
-        status: 'verified',
-        evidence: [
-          {
-            id: 'ev-ds4',
-            sourceType: 'schema',
-            sourceReference: 'climate_2024.parquet',
-            contentSnippet: '31 columns including anomaly_score, ml_model_ver, satellite_match_id',
-            confidence: 'verified'
-          }
-        ]
-      }
-    ],
-    reconstructedVersions: [
-      {
-        id: 'v-ds-2018',
-        yearLabel: '2018',
-        versionTag: 'v1.0-raw',
-        date: '2018-01-01',
-        architecture: { database: 'CSV Flat File' },
-        filesCount: 1,
-        filesList: ['climate_2018.csv'],
-        dependencies: {},
-        featuresList: ['Raw temperature readings', 'Basic station coordinates'],
-        schemaSummary: { columnsCount: 8, tablesCount: 1, keyFields: ['timestamp', 'station_id', 'temp_c'] }
-      },
-      {
-        id: 'v-ds-2024',
-        yearLabel: '2024',
-        versionTag: 'v4.0-enriched',
-        date: '2024-06-30',
-        architecture: { database: 'Parquet + GeoPandas' },
-        filesCount: 4,
-        filesList: ['climate_2024.parquet', 'schema_validation.json'],
-        dependencies: { pyarrow: '14.0.1', geopandas: '0.14.0' },
-        featuresList: ['31 enriched columns', 'Quality control flags', 'AI Anomaly Scores'],
-        schemaSummary: { columnsCount: 31, tablesCount: 1, keyFields: ['timestamp', 'station_id', 'anomaly_score', 'qc_flag'] }
-      }
-    ],
-    digitalFossils: [],
-    missingHistoryGaps: [],
-    hypotheses: [],
-    graphNodes: [
-      { id: 'n-ds-2018', label: '2018 Schema (8 cols)', type: 'schema', confidence: 'verified' },
-      { id: 'n-ds-2024', label: '2024 Schema (31 cols)', type: 'schema', confidence: 'verified' }
-    ],
-    graphEdges: [
-      { id: 'e-ds-1', source: 'n-ds-2018', target: 'n-ds-2024', label: 'expanded' }
-    ],
-    whatIfBranches: [],
-    auditLogs: []
   }
 ];

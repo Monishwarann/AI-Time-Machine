@@ -11,7 +11,8 @@ import {
   MultipleHypothesis,
   GraphNode,
   GraphEdge,
-  AuditTrailItem
+  AuditTrailItem,
+  ChangeScorecard
 } from '../types/timeMachine';
 
 export function reconstructTimeMachine(
@@ -276,6 +277,16 @@ export function reconstructTimeMachine(
     details: `Reconstructed ${timelineEvents.length} events, ${reconstructedVersions.length} historical states, and ${graphNodes.length} graph nodes.`
   });
 
+  const scorecard: ChangeScorecard = {
+    versionsDetected: reconstructedVersions.length,
+    filesAnalyzed: files.length,
+    majorChanges: timelineEvents.length,
+    technologiesDetected: codeAnalysis.detectedFrameworks.length + codeAnalysis.detectedLanguages.length,
+    architectureChanges: reconstructedVersions.length > 1 ? reconstructedVersions.length - 1 : 1,
+    uiChanges: codeAnalysis.detectedFrameworks.length,
+    evidenceSources: timelineEvents.reduce((acc, e) => acc + e.evidence.length, 0) + 5
+  };
+
   return {
     id: `proj-${Date.now()}`,
     name: projectName || 'Uploaded Project',
@@ -288,6 +299,7 @@ export function reconstructTimeMachine(
     confidenceScore: codeAnalysis.detectedLanguages.length > 0 ? 'High' : 'Medium',
     lastAnalyzedDate: new Date().toISOString().replace('T', ' ').substring(0, 16),
     fileHash,
+    scorecard,
     timelineEvents,
     reconstructedVersions,
     digitalFossils,

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Sliders, Layers, Code, CheckCircle, Package, Database, Key } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sliders, Layers, Code, CheckCircle, Package, Play, Pause, RotateCcw } from 'lucide-react';
 import { ReconstructedVersion } from '../../types/timeMachine';
 
 interface VersionSliderProps {
@@ -9,7 +9,28 @@ interface VersionSliderProps {
 
 export const VersionSlider: React.FC<VersionSliderProps> = ({ versions, onVersionSelect }) => {
   const [selectedIndex, setSelectedIndex] = useState(versions.length - 1);
+  const [isPlaying, setIsPlaying] = useState(false);
   const activeVersion = versions[selectedIndex] || versions[0];
+
+  useEffect(() => {
+    let interval: any = null;
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setSelectedIndex(prev => {
+          const next = prev + 1;
+          if (next >= versions.length) {
+            setIsPlaying(false);
+            return prev;
+          }
+          if (versions[next] && onVersionSelect) {
+            onVersionSelect(versions[next]);
+          }
+          return next;
+        });
+      }, 1800);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying, versions, onVersionSelect]);
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const idx = parseInt(e.target.value);
@@ -19,16 +40,44 @@ export const VersionSlider: React.FC<VersionSliderProps> = ({ versions, onVersio
     }
   };
 
+  const togglePlay = () => {
+    if (selectedIndex >= versions.length - 1) {
+      setSelectedIndex(0);
+    }
+    setIsPlaying(!isPlaying);
+  };
+
   if (!versions || versions.length === 0) return null;
 
   return (
     <div className="bg-[#0b0e17]/90 border border-slate-800 rounded-2xl p-6 space-y-6 font-mono">
       {/* Title Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
-        <div className="flex items-center space-x-2.5">
-          <Sliders className="w-5 h-5 text-amber-400" />
-          <h3 className="font-bold text-slate-100 text-sm">HISTORICAL VERSION SCRUBBER</h3>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={togglePlay}
+            className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all shadow-md ${
+              isPlaying
+                ? 'bg-amber-500 text-slate-950 hover:bg-amber-400'
+                : 'bg-gradient-to-r from-cyan-500 to-amber-400 text-slate-950 hover:from-cyan-400 hover:to-amber-300'
+            }`}
+          >
+            {isPlaying ? (
+              <>
+                <Pause className="w-3.5 h-3.5 fill-slate-950" />
+                <span>Pause Auto-Play</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-3.5 h-3.5 fill-slate-950" />
+                <span>Play Timeline Evolution</span>
+              </>
+            )}
+          </button>
+
+          <h3 className="font-bold text-slate-100 text-sm hidden sm:block">HISTORICAL VERSION SCRUBBER</h3>
         </div>
+
         <div className="flex items-center space-x-2 text-xs">
           <span className="text-slate-400">Reconstructed Era:</span>
           <span className="px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">
@@ -59,7 +108,7 @@ export const VersionSlider: React.FC<VersionSliderProps> = ({ versions, onVersio
                 setSelectedIndex(idx);
                 if (onVersionSelect) onVersionSelect(v);
               }}
-              className={`transition-all ${idx === selectedIndex ? 'text-cyan-300 font-bold underline' : 'hover:text-slate-200'}`}
+              className={`transition-all ${idx === selectedIndex ? 'text-cyan-300 font-bold underline scale-110' : 'hover:text-slate-200'}`}
             >
               {v.yearLabel}
             </button>
