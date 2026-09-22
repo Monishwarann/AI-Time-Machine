@@ -1,60 +1,77 @@
-# AI TIME MACHINE ⏳
+# ⏳ AI TIME MACHINE V3
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18.3-61dafb.svg)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646cff.svg)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)](https://tailwindcss.com/)
+[![Security Policy](https://img.shields.io/badge/Security-Policy-red.svg)](SECURITY.md)
 
 > **“Reconstruct the Past. Explore the Evolution. Understand the Future.”**
 
-AI Time Machine is an AI-powered digital archaeology and historical reconstruction platform where users can upload an old software project, website, document, codebase, dataset, report, or design. The system analyzes file metadata, syntax ASTs, dependencies, schemas, and structural signals to reconstruct a probable timeline of how the artifact evolved.
+AI Time Machine is an AI-powered digital archaeology and temporal intelligence platform. Upload old software projects, websites, documents, codebases, datasets, or GitHub repositories, and AI Time Machine analyzes structure, syntax ASTs, dependencies, schemas, and evidence markers to reconstruct an **interactive, evidence-grounded evolution timeline**.
 
 ---
 
-## 🌟 Key Features
+## 🚀 Key Features
 
-* **Digital Archaeology Engine**: Analyzes ZIP archives, Git repositories, code folders, CSV/SQL datasets, Markdown docs, and PDFs with real processing stages.
-* **Strict Evidence & Confidence Classification**: Clearly labels facts vs. AI inference (`VERIFIED`, `STRONGLY SUPPORTED`, `PLAUSIBLE`, `SPECULATIVE`, `UNKNOWN`).
-* **Interactive Timeline & Version Slider**: Scrub through reconstructed historical states (2019–2025) with live updates to architecture, files, and dependencies.
-* **Version Comparison & Diff Engine**: Side-by-side file diffs, dependency version tracking, and architectural shift analysis ("Monolith -> Services").
-* **Interactive Evidence Graph**: Visual node-link network connecting Timeline Events ↔ Files ↔ Dependencies ↔ Docs ↔ Schemas.
-* **"What-If?" Alternative Timelines**: Branch off historical points to generate hypothetical scenarios clearly watermarked `HYPOTHETICAL — NOT HISTORICAL FACT`.
-* **Digital Fossils & Lost Feature Detector**: Discover deprecated APIs, dead features, orphan configs, and legacy dependencies.
-* **Missing History Detector & Evidence Heatmaps**: Highlights temporal gaps and recommends complementary artifacts to reduce uncertainty.
-* **AI Historical Assistant (RAG)**: Ask evidence-grounded questions with cited source lines and multi-hypothesis explanations.
-* **Audit Trail & Multi-Format Exporters**: Generate PDF, Markdown, JSON, and CSV research reports with SHA-256 artifact hashes.
-
----
-
-## 🚀 Quick Start
-
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-2. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-3. Open your browser at `http://localhost:3000`.
+* 🔬 **Digital Archaeology Engine**: Parses ZIP archives, Git exports, source code folders, SQL schemas, CSV/JSON datasets, HTML/CSS, and PDFs.
+* 🛡️ **Evidence-First & Hallucination Firewall (`CLM-0042`)**: Classifies every claim into 5 confidence tiers (`VERIFIED`, `STRONGLY SUPPORTED`, `PLAUSIBLE`, `SPECULATIVE`, `UNKNOWN`) linked directly to source evidence.
+* 🔍 **Time Travel Debugger**: Comparative file explorer with `+` (added), `-` (removed), `~` (modified), and `?` (unknown origin) line diffs.
+* 📜 **Claim Ledger**: Full audit trail mapping AI claims back to verified raw files and cryptographic SHA-256 hashes.
+* 🏚️ **Lost vs Survived Dashboard**: Tracks preserved legacy code patterns versus deprecated/removed features across time.
+* 🔮 **"What-If?" Alternative Timelines**: Simulate hypothetical evolution branches watermarked as `HYPOTHETICAL`.
+* 🎬 **Cinematic Replay Mode**: Step-by-step auto-playing replay of project evolution with pause & inspect controls.
+* 📜 **Cryptographic Version Certificates**: Generates verifiable PDF/JSON certificates of artifact authenticity.
+* ⌨️ **Command Palette (`Ctrl+K`)**: Instant search and navigation across all archaeology views.
+* 🔗 **Public Share Links**: Exportable `/inspect/:id` view links with customizable permissions.
+* 🐳 **Docker Support**: Ready-to-deploy containerization with `docker-compose`.
 
 ---
 
-## 🛠️ Monorepo Architecture
+## 🛠 Quick Start
 
-```text
-ai-time-machine/
-├── frontend/
-│   ├── src/
-│   │   ├── components/       # UI Components (Timeline, Graph, Diffs, What-If)
-│   │   ├── engine/           # Analysis, Parsers, Confidence & RAG Engine
-│   │   ├── store/            # State management
-│   │   └── types/            # Data types & interfaces
-│   └── public/
-├── backend/                  # REST & Async WebSocket Processing Pipeline
-├── database/                 # PostgreSQL + pgvector schemas
-└── docs/                     # Architecture & Audit specs
+### Prerequisites
+- Node.js >= 18.x
+- npm >= 9.x
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/Monishwarann/AI-Time-Machine.git
+cd AI-Time-Machine
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
+## 🐳 Docker Deployment
+
+```bash
+# Build and run container
+docker-compose up --build
 ```
 
 ---
 
-## 📜 License
+## 📜 Documentation & Policies
 
-MIT License. Designed with precision for Digital Archaeology and Software Evolution Research.
+- 📄 [MIT License](LICENSE)
+- 🛡️ [Security Policy & Data Integrity](SECURITY.md)
+- 🤝 [Contributing Guidelines](CONTRIBUTING.md)
+- 📜 [Code of Conduct](CODE_OF_CONDUCT.md)
+
+---
+
+## 📬 Contact & Support
+
+Created by **Monishwarann** — [k.monishwaran123@gmail.com](mailto:k.monishwaran123@gmail.com)
