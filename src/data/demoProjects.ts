@@ -22,10 +22,62 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
       uiChanges: 12,
       evidenceSources: 43
     },
+    projectDna: {
+      languagesPct: { 'Python': 55, 'TypeScript': 35, 'SQL': 10 },
+      frameworks: ['FastAPI', 'React', 'Tailwind CSS', 'Next.js'],
+      architectureType: 'Decoupled REST Microservices + Agents',
+      databaseType: 'PostgreSQL + pgvector extension',
+      apiStyle: 'OpenAPI REST + WebSockets',
+      designPatterns: ['Repository Pattern', 'Agentic Loop Orchestration'],
+      mlComponents: ['ChromaDB Vector Store', 'Gemini & Groq Multi-LLM Gateway']
+    },
+    reconstructionQuality: {
+      evidenceCoveragePct: 88,
+      timelineCoveragePct: 82,
+      metadataAvailabilityPct: 75,
+      versionCertaintyPct: 85,
+      overallStatus: 'FULLY SUPPORTED'
+    },
+    conflicts: [
+      {
+        id: 'conf-demo-1',
+        title: 'Retroactive Documentation Timestamp Shift',
+        conflictingSources: [
+          { sourceName: 'README.md header', dateClaimed: '2020', detail: 'Document claims REST API existed in 2020' },
+          { sourceName: 'api/router.py', dateClaimed: '2022', detail: 'FastAPI router files introduced in 2022 artifact' }
+        ],
+        possibleExplanations: [
+          'Documentation was written retrospectively during the 2022 refactoring',
+          'Earlier Flask REST routes were replaced entirely by FastAPI'
+        ],
+        severity: 'medium'
+      }
+    ],
+    anomalies: [
+      {
+        id: 'anom-demo-1',
+        title: 'Sudden Vector Database Adoption',
+        type: 'unexpected_dependency',
+        description: 'Discovered abrupt addition of ChromaDB and OpenAI dependencies in year 2023 without prior staging logs.',
+        evidenceIds: ['ev-7'],
+        severity: 'high'
+      }
+    ],
+    artifacts: [
+      {
+        id: 'art-demo-1',
+        name: 'ai_research_platform_v1_v5.zip',
+        type: 'ZIP',
+        size: 14500000,
+        uploadDate: '2026-09-22',
+        hash: 'sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+      }
+    ],
     timelineEvents: [
       {
         id: 'evt-2019',
         date: '2019',
+        datePrecision: 'year',
         title: 'Initial Concept & CLI Script',
         description: 'Single standalone Python script with basic NumPy array processing and command-line execution.',
         type: 'initial_concept',
@@ -53,6 +105,7 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
       {
         id: 'evt-2020',
         date: '2020',
+        datePrecision: 'year',
         title: 'Flask Web Prototype',
         description: 'Introduced web server layer with Flask and basic HTML templates for uploading inputs.',
         type: 'architecture',
@@ -76,6 +129,7 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
       {
         id: 'evt-2021',
         date: '2021',
+        datePrecision: 'year',
         title: 'Database & Relational Persistence',
         description: 'SQLite backend introduced for storing run metrics and user query history.',
         type: 'database',
@@ -97,6 +151,7 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
       {
         id: 'evt-2022',
         date: '2022',
+        datePrecision: 'year',
         title: 'FastAPI & JWT Authentication Added',
         description: 'Migration from Flask to FastAPI for async execution, adding bearer token JWT security.',
         type: 'security',
@@ -120,6 +175,7 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
       {
         id: 'evt-2023',
         date: '2023',
+        datePrecision: 'year',
         title: 'Vector Embeddings & RAG Module Introduced',
         description: 'First integration of vector embeddings and semantic search pipelines.',
         type: 'feature',
@@ -143,6 +199,7 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
       {
         id: 'evt-2024',
         date: '2024',
+        datePrecision: 'year',
         title: 'React Dashboard & Microservice Decoupling',
         description: 'Frontend migrated to modern React + Tailwind CSS SPA with decoupled REST API.',
         type: 'ui',
@@ -166,6 +223,7 @@ export const DEMO_PROJECTS: TimeMachineProject[] = [
       {
         id: 'evt-2025',
         date: '2025',
+        datePrecision: 'year',
         title: 'Current State: Autonomous Agent Hub',
         description: 'Multi-agent orchestration loop with full audit trail logging and PostgreSQL vector search.',
         type: 'refactoring',

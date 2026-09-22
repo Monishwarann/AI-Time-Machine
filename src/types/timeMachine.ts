@@ -17,17 +17,19 @@ export type EventCategory =
 
 export interface EvidenceItem {
   id: string;
-  sourceType: 'file' | 'git' | 'metadata' | 'dependency' | 'schema' | 'doc_heading';
+  sourceType: 'file' | 'git' | 'metadata' | 'dependency' | 'schema' | 'doc_heading' | 'screenshot' | 'user_annotation';
   sourceReference: string;
   contentSnippet: string;
   confidence: ConfidenceLevel;
   timestamp?: string;
   limitations?: string;
+  contradictingEventIds?: string[];
 }
 
 export interface TimelineEvent {
   id: string;
-  date: string; // e.g. "2021" or "2021-06"
+  date: string;
+  datePrecision?: 'exact' | 'year' | 'month' | 'approximate';
   title: string;
   description: string;
   type: EventCategory;
@@ -41,6 +43,53 @@ export interface TimelineEvent {
   schemaChanges?: string[];
   commitHash?: string;
   commitAuthor?: string;
+  userAnnotations?: HumanAnnotation[];
+}
+
+export interface HumanAnnotation {
+  id: string;
+  targetId: string;
+  targetType: 'event' | 'file' | 'screenshot' | 'evidence';
+  author: string;
+  timestamp: string;
+  comment: string;
+  overrideDate?: string;
+  isOverride?: boolean;
+}
+
+export interface EvidenceConflict {
+  id: string;
+  title: string;
+  conflictingSources: { sourceName: string; dateClaimed: string; detail: string }[];
+  possibleExplanations: string[];
+  severity: 'high' | 'medium' | 'low';
+}
+
+export interface HistoricalAnomaly {
+  id: string;
+  title: string;
+  type: 'sudden_architecture' | 'unexpected_dependency' | 'missing_files' | 'schema_jump' | 'terminology_shift';
+  description: string;
+  evidenceIds: string[];
+  severity: 'high' | 'medium' | 'low';
+}
+
+export interface ProjectDNA {
+  languagesPct: Record<string, number>;
+  frameworks: string[];
+  architectureType: string;
+  databaseType: string;
+  apiStyle: string;
+  designPatterns: string[];
+  mlComponents: string[];
+}
+
+export interface ReconstructionQuality {
+  evidenceCoveragePct: number;
+  timelineCoveragePct: number;
+  metadataAvailabilityPct: number;
+  versionCertaintyPct: number;
+  overallStatus: 'FULLY SUPPORTED' | 'PARTIALLY SUPPORTED' | 'SPARSE EVIDENCE';
 }
 
 export interface ReconstructedVersion {
@@ -143,21 +192,35 @@ export interface ChangeScorecard {
   evidenceSources: number;
 }
 
+export interface MultiArtifactItem {
+  id: string;
+  name: string;
+  type: 'ZIP' | 'Code' | 'PDF' | 'SQL' | 'CSV' | 'Screenshot' | 'Doc';
+  size: number;
+  uploadDate: string;
+  hash: string;
+}
+
 export interface TimeMachineProject {
   id: string;
   name: string;
   description: string;
-  artifactType: 'ZIP Archive' | 'Codebase' | 'Website' | 'Document' | 'Dataset' | 'API Schema' | 'GitHub Repository';
+  artifactType: 'ZIP Archive' | 'Codebase' | 'Website' | 'Document' | 'Dataset' | 'API Schema' | 'GitHub Repository' | 'Multi-Artifact Investigation';
   githubUrl?: string;
   hasVerifiedGitHistory?: boolean;
   uploadDate: string;
-  estimatedCoverage: string; // e.g. "2019 → 2025"
+  estimatedCoverage: string;
   versionCount: number;
   evidenceCount: number;
   confidenceScore: 'High' | 'Medium' | 'Low' | 'Speculative';
   lastAnalyzedDate: string;
   fileHash: string;
   scorecard: ChangeScorecard;
+  projectDna: ProjectDNA;
+  reconstructionQuality: ReconstructionQuality;
+  conflicts: EvidenceConflict[];
+  anomalies: HistoricalAnomaly[];
+  artifacts: MultiArtifactItem[];
   timelineEvents: TimelineEvent[];
   reconstructedVersions: ReconstructedVersion[];
   digitalFossils: DigitalFossil[];

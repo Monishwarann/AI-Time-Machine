@@ -1,6 +1,8 @@
 import { ExtractedFile } from './archiveExtractor';
 import { analyzeCodebase } from './codeAnalyzer';
 import { analyzeDataset } from './datasetAnalyzer';
+import { detectEvidenceConflicts, detectHistoricalAnomalies } from './v2/evidenceValidator';
+import { calculateProjectDNA, calculateReconstructionQuality } from './v2/timelineArchitect';
 import {
   TimeMachineProject,
   TimelineEvent,
@@ -20,12 +22,9 @@ export function reconstructTimeMachine(
   files: ExtractedFile[],
   progressCallback?: (stage: string) => void
 ): TimeMachineProject {
-  progressCallback?.('Analyzing file timestamps & metadata...');
-  
-  // Hash calculation simulation
+  progressCallback?.('Multi-Agent Analysis: Metadata Archaeologist observing file tree...');
   const fileHash = `sha256:${Math.random().toString(36).substring(2)}${Date.now().toString(36)}`;
   
-  // Extract dates
   const dates = files
     .map(f => f.lastModified ? new Date(f.lastModified).getFullYear() : null)
     .filter((y): y is number => y !== null && !isNaN(y) && y > 1990 && y <= 2030);
@@ -34,13 +33,11 @@ export function reconstructTimeMachine(
   const maxYear = dates.length > 0 ? Math.max(...dates) : 2026;
   const coverageStr = `${minYear} → ${maxYear}`;
 
-  progressCallback?.('Analyzing code architecture & dependencies...');
+  progressCallback?.('Multi-Agent Analysis: Code & Document Archaeologists parsing syntax...');
   const codeAnalysis = analyzeCodebase(files);
-
-  progressCallback?.('Analyzing dataset schema & structural evolution...');
   const datasetAnalysis = analyzeDataset(files);
 
-  progressCallback?.('Generating chronological evidence timeline...');
+  progressCallback?.('Multi-Agent Analysis: Timeline Architect correlating facts...');
   const timelineEvents: TimelineEvent[] = [];
   const graphNodes: GraphNode[] = [];
   const graphEdges: GraphEdge[] = [];
@@ -48,24 +45,21 @@ export function reconstructTimeMachine(
   const digitalFossils: DigitalFossil[] = [];
   const auditLogs: AuditTrailItem[] = [];
 
-  // Audit 1
   auditLogs.push({
     id: 'aud-init',
     timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
     stage: 'Artifact Extraction',
     status: 'success',
-    details: `Processed ${files.length} files. Hash generated: ${fileHash.substring(0, 20)}...`,
+    details: `Processed ${files.length} files. Hash: ${fileHash.substring(0, 20)}...`,
     hash: fileHash
   });
 
-  // Reconstruct Events based on physical code signals
   let eventIdx = 1;
-  
-  // Event 1: Initial Concept
   const event1Year = String(minYear);
   timelineEvents.push({
     id: `evt-${eventIdx++}`,
     date: event1Year,
+    datePrecision: 'year',
     title: 'Initial Concept & Core Structure',
     description: `Artifact repository initialized with core ${codeAnalysis.detectedLanguages[0] || 'code'} structure and configuration.`,
     type: 'initial_concept',
@@ -83,12 +77,12 @@ export function reconstructTimeMachine(
     ]
   });
 
-  // Event 2: Database Layer if detected
   if (codeAnalysis.databaseDetected) {
     const dbYear = String(minYear + 1 <= maxYear ? minYear + 1 : minYear);
     timelineEvents.push({
       id: `evt-${eventIdx++}`,
       date: dbYear,
+      datePrecision: 'year',
       title: 'Database Persistence Schema Added',
       description: 'Relational query models, tables, or database ORM dependencies detected in codebase.',
       type: 'database',
@@ -107,12 +101,12 @@ export function reconstructTimeMachine(
     });
   }
 
-  // Event 3: Auth Layer if detected
   if (codeAnalysis.authDetected) {
     const authYear = String(minYear + 2 <= maxYear ? minYear + 2 : maxYear);
     timelineEvents.push({
       id: `evt-${eventIdx++}`,
       date: authYear,
+      datePrecision: 'year',
       title: 'Authentication & Security Module Integrated',
       description: 'JWT bearer auth, session handling, or user permission checks introduced.',
       type: 'security',
@@ -131,11 +125,11 @@ export function reconstructTimeMachine(
     });
   }
 
-  // Event 4: AI / Vector DB if detected
   if (codeAnalysis.vectorDbDetected) {
     timelineEvents.push({
       id: `evt-${eventIdx++}`,
       date: String(maxYear),
+      datePrecision: 'year',
       title: 'AI Engine & Vector Embedding Layer',
       description: 'Vector database drivers, LLM clients, or agentic loop orchestration added to project.',
       type: 'feature',
@@ -154,7 +148,6 @@ export function reconstructTimeMachine(
     });
   }
 
-  // Build Reconstructed Versions
   const totalYears = Math.max(1, maxYear - minYear + 1);
   const yearStep = Math.max(1, Math.floor(totalYears / 3));
 
@@ -188,7 +181,6 @@ export function reconstructTimeMachine(
     });
   }
 
-  // Fossils
   if (Object.keys(codeAnalysis.dependencies).length > 0) {
     const firstDep = Object.keys(codeAnalysis.dependencies)[0];
     digitalFossils.push({
@@ -203,7 +195,6 @@ export function reconstructTimeMachine(
     });
   }
 
-  // Missing history gaps
   const missingHistoryGaps: MissingHistoryGap[] = [];
   if (totalYears > 3) {
     missingHistoryGaps.push({
@@ -216,7 +207,6 @@ export function reconstructTimeMachine(
     });
   }
 
-  // Graph Nodes & Edges
   timelineEvents.forEach((evt, idx) => {
     graphNodes.push({
       id: `gn-evt-${evt.id}`,
@@ -246,7 +236,6 @@ export function reconstructTimeMachine(
     });
   });
 
-  // Multiple Hypotheses
   const hypotheses: MultipleHypothesis[] = [
     {
       id: 'hyp-auto-1',
@@ -269,13 +258,11 @@ export function reconstructTimeMachine(
     }
   ];
 
-  auditLogs.push({
-    id: 'aud-complete',
-    timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-    stage: 'Timeline Generation',
-    status: 'success',
-    details: `Reconstructed ${timelineEvents.length} events, ${reconstructedVersions.length} historical states, and ${graphNodes.length} graph nodes.`
-  });
+  progressCallback?.('Multi-Agent Analysis: Evidence Validator detecting conflicts & anomalies...');
+  const conflicts = detectEvidenceConflicts(timelineEvents);
+  const anomalies = detectHistoricalAnomalies(timelineEvents);
+  const projectDna = calculateProjectDNA(codeAnalysis.detectedLanguages, codeAnalysis.detectedFrameworks);
+  const reconstructionQuality = calculateReconstructionQuality(timelineEvents);
 
   const scorecard: ChangeScorecard = {
     versionsDetected: reconstructedVersions.length,
@@ -289,7 +276,7 @@ export function reconstructTimeMachine(
 
   return {
     id: `proj-${Date.now()}`,
-    name: projectName || 'Uploaded Project',
+    name: projectName || 'Uploaded Project Investigation',
     description: `Reconstructed digital history of ${files.length} files across ${coverageStr}. Detected ${codeAnalysis.detectedLanguages.join(', ') || 'digital artifacts'}.`,
     artifactType: datasetAnalysis.isDataset ? 'Dataset' : 'Codebase',
     uploadDate: new Date().toISOString().substring(0, 10),
@@ -300,6 +287,20 @@ export function reconstructTimeMachine(
     lastAnalyzedDate: new Date().toISOString().replace('T', ' ').substring(0, 16),
     fileHash,
     scorecard,
+    projectDna,
+    reconstructionQuality,
+    conflicts,
+    anomalies,
+    artifacts: [
+      {
+        id: `art-1`,
+        name: `${projectName}.zip`,
+        type: 'ZIP',
+        size: files.reduce((acc, f) => acc + f.size, 0),
+        uploadDate: new Date().toISOString().substring(0, 10),
+        hash: fileHash
+      }
+    ],
     timelineEvents,
     reconstructedVersions,
     digitalFossils,

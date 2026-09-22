@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { TimeMachineProject, TimelineEvent, ReconstructedVersion } from '../../types/timeMachine';
+import React, { useState, useEffect } from 'react';
+import { TimeMachineProject, TimelineEvent, ReconstructedVersion, HumanAnnotation } from '../../types/timeMachine';
 import { InteractiveTimeline } from '../timeline/InteractiveTimeline';
 import { EventDetailModal } from '../timeline/EventDetailModal';
 import { DiffViewer } from '../compare/DiffViewer';
@@ -13,6 +13,13 @@ import { WebsitePreviewModal } from './WebsitePreviewModal';
 import { DatasetEvolutionView } from '../dataset/DatasetEvolutionView';
 import { ChangeScorecardView } from '../dashboard/ChangeScorecard';
 import { GlobalSearchModal } from '../search/GlobalSearchModal';
+import { CommandPalette } from '../layout/CommandPalette';
+import { ConflictDetectorView } from '../audit/ConflictDetectorView';
+import { AnomalyDetectorView } from '../audit/AnomalyDetectorView';
+import { ProjectDnaView } from './ProjectDnaView';
+import { ReconstructionQualityPanel } from '../dashboard/ReconstructionQualityPanel';
+import { HumanCorrectionModal } from '../annotations/HumanCorrectionModal';
+import { PublicShareModal } from '../sharing/PublicShareModal';
 import {
   History,
   Compass,
@@ -27,7 +34,12 @@ import {
   ArrowLeft,
   Globe,
   Database,
-  Search
+  Search,
+  Dna,
+  Share2,
+  Terminal,
+  Zap,
+  UserCheck
 } from 'lucide-react';
 
 interface ProjectExplorerProps {
@@ -36,11 +48,36 @@ interface ProjectExplorerProps {
 }
 
 export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBackToDashboard }) => {
-  const [activeTab, setActiveTab] = useState<'timeline' | 'compare' | 'dataset' | 'graph' | 'whatif' | 'assistant' | 'fossils' | 'audit'>('timeline');
+  const [activeTab, setActiveTab] = useState<string>('timeline');
   const [selectedEvent, setSelectedEvent] = useState<TimelineEvent | null>(null);
+  const [annotationEvent, setAnnotationEvent] = useState<TimelineEvent | null>(null);
   const [websitePreviewVersion, setWebsitePreviewVersion] = useState<ReconstructedVersion | null>(null);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsPaletteOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleSaveAnnotation = (annotation: HumanAnnotation) => {
+    if (!annotationEvent) return;
+    if (!annotationEvent.userAnnotations) {
+      annotationEvent.userAnnotations = [];
+    }
+    annotationEvent.userAnnotations.push(annotation);
+    if (annotation.overrideDate) {
+      annotationEvent.date = annotation.overrideDate;
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-mono">
@@ -69,32 +106,39 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
             </div>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-wrap items-center gap-2.5">
             <button
-              onClick={() => setIsSearchOpen(true)}
-              className="flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/40 text-slate-300 text-xs font-bold transition-all"
+              onClick={() => setIsPaletteOpen(true)}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs font-bold transition-all"
+              title="Command Palette (Ctrl + K)"
             >
-              <Search className="w-4 h-4 text-cyan-400" />
-              <span>Search History</span>
+              <Terminal className="w-4 h-4 text-cyan-400" />
+              <span className="hidden sm:inline">Command Palette</span>
+              <span className="text-[10px] bg-slate-950 px-1.5 py-0.5 rounded text-slate-400">Ctrl+K</span>
             </button>
 
             <button
-              onClick={() => setWebsitePreviewVersion(project.reconstructedVersions[0])}
-              className="flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/40 text-amber-300 text-xs font-bold transition-all"
+              onClick={() => setIsShareOpen(true)}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-cyan-300 text-xs font-bold transition-all"
             >
-              <Globe className="w-4 h-4 text-amber-400" />
-              <span>UI Website Preview</span>
+              <Share2 className="w-4 h-4 text-cyan-400" />
+              <span className="hidden sm:inline">Share Public Link</span>
             </button>
 
             <button
               onClick={() => setIsExportOpen(true)}
-              className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-300 font-bold text-xs transition-all shadow-md"
+              className="flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-300 font-bold text-xs transition-all shadow-md"
             >
               <Download className="w-4 h-4 text-cyan-400" />
-              <span>Export Report</span>
+              <span>Export Report V2</span>
             </button>
           </div>
         </div>
+
+        {/* Quality Coverage Panel V2 */}
+        {project.reconstructionQuality && (
+          <ReconstructionQualityPanel quality={project.reconstructionQuality} />
+        )}
 
         {/* Scorecard Component */}
         <ChangeScorecardView scorecard={project.scorecard} />
@@ -132,6 +176,42 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
         >
           <FileDiff className="w-4 h-4" />
           <span>Compare Versions</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('dna')}
+          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
+            activeTab === 'dna'
+              ? 'bg-purple-500/20 text-purple-300 border-purple-500/40 font-bold'
+              : 'text-slate-400 border-transparent hover:text-slate-200'
+          }`}
+        >
+          <Dna className="w-4 h-4 text-purple-400" />
+          <span>Project DNA</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('conflicts')}
+          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
+            activeTab === 'conflicts'
+              ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 font-bold'
+              : 'text-slate-400 border-transparent hover:text-slate-200'
+          }`}
+        >
+          <AlertTriangle className="w-4 h-4 text-rose-400" />
+          <span>Conflicts ({project.conflicts?.length || 0})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('anomalies')}
+          className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all border ${
+            activeTab === 'anomalies'
+              ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold'
+              : 'text-slate-400 border-transparent hover:text-slate-200'
+          }`}
+        >
+          <Zap className="w-4 h-4 text-amber-400" />
+          <span>Anomalies ({project.anomalies?.length || 0})</span>
         </button>
 
         <button
@@ -179,7 +259,7 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
           }`}
         >
           <Bot className="w-4 h-4" />
-          <span>AI Assistant</span>
+          <span>AI Archaeologist</span>
         </button>
 
         <button
@@ -213,6 +293,9 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
           <InteractiveTimeline project={project} onSelectEvent={evt => setSelectedEvent(evt)} />
         )}
         {activeTab === 'compare' && <DiffViewer project={project} />}
+        {activeTab === 'dna' && <ProjectDnaView project={project} />}
+        {activeTab === 'conflicts' && <ConflictDetectorView project={project} />}
+        {activeTab === 'anomalies' && <AnomalyDetectorView project={project} />}
         {activeTab === 'dataset' && <DatasetEvolutionView project={project} />}
         {activeTab === 'graph' && <EvidenceGraphView project={project} />}
         {activeTab === 'whatif' && <WhatIfBranchGenerator project={project} />}
@@ -226,6 +309,14 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
         <EventDetailModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />
       )}
 
+      {annotationEvent && (
+        <HumanCorrectionModal
+          event={annotationEvent}
+          onSaveAnnotation={handleSaveAnnotation}
+          onClose={() => setAnnotationEvent(null)}
+        />
+      )}
+
       {websitePreviewVersion && (
         <WebsitePreviewModal version={websitePreviewVersion} onClose={() => setWebsitePreviewVersion(null)} />
       )}
@@ -236,6 +327,18 @@ export const ProjectExplorer: React.FC<ProjectExplorerProps> = ({ project, onBac
 
       {isSearchOpen && (
         <GlobalSearchModal project={project} onSelectEvent={evt => setSelectedEvent(evt)} onClose={() => setIsSearchOpen(false)} />
+      )}
+
+      {isPaletteOpen && (
+        <CommandPalette
+          isOpen={isPaletteOpen}
+          onClose={() => setIsPaletteOpen(false)}
+          onSelectCommand={tab => setActiveTab(tab)}
+        />
+      )}
+
+      {isShareOpen && (
+        <PublicShareModal project={project} onClose={() => setIsShareOpen(false)} />
       )}
     </div>
   );
